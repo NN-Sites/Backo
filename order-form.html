@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ביצוע הזמנה</title>
+  <style>
+    body {
+      font-family: 'Rubik', sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+      direction: rtl;
+      text-align: right;
+    }
+    .form-container {
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 64, 255, 0.1);
+    }
+    h2 {
+      color: #0040ff;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+    input[readonly] {
+      background-color: #f3f3f3;
+      color: #555;
+    }
+    a#order-link {
+      display: block;
+      margin-top: 25px;
+      padding: 15px;
+      font-size: 1.1em;
+      font-weight: bold;
+      color: white;
+      background-color: #0040ff;
+      border-radius: 10px;
+      text-align: center;
+      text-decoration: none;
+      cursor: not-allowed;
+      pointer-events: none;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    a#order-link.enabled {
+      cursor: pointer;
+      pointer-events: auto;
+      background-color: #0040ff;
+      color: white;
+      box-shadow: 0 0 10px #0040ffaa;
+    }
+    a#order-link.enabled:hover {
+      background-color: white;
+      color: #0040ff;
+      border: 2px solid #0040ff;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>ביצוע הזמנה</h2>
+    <form id="order-form" novalidate onsubmit="return false;">
+      <label for="name">שם מלא</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="phone">טלפון</label>
+      <input type="tel" id="phone" name="phone" required />
+
+      <label for="email">אימייל</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="productInput">מוצר</label>
+      <input type="text" id="productInput" name="product" readonly />
+
+      <label for="priceInput">מחיר</label>
+      <input type="text" id="priceInput" name="price" readonly />
+
+      <a id="order-link" href="#" tabindex="-1">בצע הזמנה בוואטסאפ</a>
+    </form>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const product = urlParams.get('product') || '';
+    const price = urlParams.get('price') || '';
+
+    const productInput = document.getElementById('productInput');
+    const priceInput = document.getElementById('priceInput');
+    const nameInput = document.getElementById('name');
+    const phoneInput = document.getElementById('phone');
+    const emailInput = document.getElementById('email');
+    const orderLink = document.getElementById('order-link');
+
+    const whatsappNumber = "972533752747";
+
+    productInput.value = product;
+    priceInput.value = price;
+
+    function updateWhatsAppLink() {
+      const name = nameInput.value.trim();
+      const phoneRaw = phoneInput.value.trim();
+      const email = emailInput.value.trim();
+
+      if (name && phoneRaw && email) {
+        let phone = phoneRaw.replace(/[^0-9]/g, '');
+        if (phone.startsWith('0')) {
+          phone = '972' + phone.slice(1);
+        }
+
+        const message = 
+`שלום! התקבלה הזמנה מהאתר:
+🛍 מוצר: ${product}
+💸 מחיר: ${price}
+🙋‍♂️ שם הלקוח: ${name}
+📞 טלפון: ${phoneRaw}
+📧 אימייל: ${email}`;
+
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+        orderLink.href = whatsappLink;
+        orderLink.classList.add('enabled');
+        orderLink.setAttribute('tabindex', '0');
+      } else {
+        orderLink.href = '#';
+        orderLink.classList.remove('enabled');
+        orderLink.setAttribute('tabindex', '-1');
+      }
+    }
+
+    [nameInput, phoneInput, emailInput].forEach(input => {
+      input.addEventListener('input', updateWhatsAppLink);
+    });
+
+    updateWhatsAppLink();
+  </script>
+
+</body>
+</html>
