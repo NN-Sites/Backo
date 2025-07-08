@@ -93,64 +93,24 @@
       <label for="priceInput">מחיר</label>
       <input type="text" id="priceInput" name="price" readonly />
 
-      <a id="order-link" href="#" tabindex="-1">בצע הזמנה בוואטסאפ</a>
+      <a id="order-link" href="#" tabindex="-1">קנה עכשיו</a>
     </form>
   </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const product = urlParams.get('product') || '';
-    const price = urlParams.get('price') || '';
+  const urlParams = new URLSearchParams(window.location.search);
+  const product = urlParams.get('product') || '';
+  const price = urlParams.get('price') || '';
 
-    const productInput = document.getElementById('productInput');
-    const priceInput = document.getElementById('priceInput');
-    const nameInput = document.getElementById('name');
-    const phoneInput = document.getElementById('phone');
-    const emailInput = document.getElementById('email');
-    const orderLink = document.getElementById('order-link');
+  const productInput = document.getElementById('productInput');
+  const priceInput = document.getElementById('priceInput');
+  const nameInput = document.getElementById('name');
+  const phoneInput = document.getElementById('phone');
+  const emailInput = document.getElementById('email');
+  const orderLink = document.getElementById('order-link');
 
-    const whatsappNumber = "972533752747";
-
-    productInput.value = product;
-    priceInput.value = price;
-
-    function updateWhatsAppLink() {
-      const name = nameInput.value.trim();
-      const phoneRaw = phoneInput.value.trim();
-      const email = emailInput.value.trim();
-
-      if (name && phoneRaw && email) {
-        let phone = phoneRaw.replace(/[^0-9]/g, '');
-        if (phone.startsWith('0')) {
-          phone = '972' + phone.slice(1);
-        }
-
-        const message = 
-`שלום! התקבלה הזמנה מהאתר:
-🛍 מוצר: ${product}
-💸 מחיר: ${price}
-🙋‍♂️ שם הלקוח: ${name}
-📞 טלפון: ${phoneRaw}
-📧 אימייל: ${email}`;
-
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
-
-        orderLink.href = whatsappLink;
-        orderLink.classList.add('enabled');
-        orderLink.setAttribute('tabindex', '0');
-      } else {
-        orderLink.href = '#';
-        orderLink.classList.remove('enabled');
-        orderLink.setAttribute('tabindex', '-1');
-      }
-    }
-
-    [nameInput, phoneInput, emailInput].forEach(input => {
-      input.addEventListener('input', updateWhatsAppLink);
-    });
-
-    updateWhatsAppLink();
+  productInput.value = product;
+  priceInput.value = price;
   </script>
 
 </body>
